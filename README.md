@@ -34,8 +34,8 @@ El componente principal del sistema de control del canal es el estado. Este es u
 ¿Pero qué es cada cosa?
 - **locks**: Lista de 3 posiciones, una para cada esclusa (0,1,2) como están en el diagrama. Si hay algún barco en la esclusa, aparece su nombre en la posición correspondiente.
 - **locks_water_level**: Lista de 3 posiciones, una para cada esclusa (0,1,2) como están en el diagrama. Representan el nivel del agua en dicha esclusa. Hay 4 opciones de nivel, *high*, *low*, *draining*, *filling*.
-- **queue_upstream**: Lista. Contiene los barcos esperando para entrar al canal desde el punto más bajo del canal. Es *upstream* porque tiene que recorrer el canal en esa dirección.
-- **queue_downstream**: Lista. Contiene los barcos esperando para entrar al canal desde el punto más alto del canal. Es *downstream* porque tiene que recorrer el canal en esa dirección.
+- **queue_upstream**: Lista. Contiene los barcos esperando para entrar al canal desde el punto más alto, *upstream*, del canal.
+- **queue_downstream**: Lista. Contiene los barcos esperando para entrar al canal desde el punto más bajo, *downstream*, del canal.
 - **gates**: Lista de 4 posiciones, una para cada compuerta (0,1,2,3). La 0 es entre el punto más bajo del canal y la esclusa 1, la 1 es entre la esclusa 1 y la 2, la 2 es entre la esclusa 2 y la 3, y la 3 es entre la esclusa 3 y el punto más alto del canal. Si la compuerta está abierta, el valor es True, si está cerrada, el valor es False.
 - **direction**: Dirección en la que está operando el canal. Puede tomar dos valores, *upstream* y *downstream*.
 - **control**: Lista de comandos a ser ejecutados por el control. Se va a explicar más en la fase I.
@@ -44,7 +44,7 @@ El componente principal del sistema de control del canal es el estado. Este es u
 ### Fase I: Ejecutar comandos de control pendientes
 
 Antes, tenemos que entender que es el control, una de las partes principales del estado. El control es una lista de tuplas de la forma `(<tiempo>, <comando>)`, que simulan acciones que llevan tiempo, y el programa debe actualizar el estado del canal cuando dichas acciones se completan. El *tiempo* es simplemente un entero que representa la cuenta regresiva hasta necesitar ejecutar el comando. En la fase I, se ejecutan comandos cuyo tiempo es 0. Al ejecutarlos se eliminan de la lista de control ¿Pero que tipos de comandos hay?
-1. **Comando move**: Este tiene la forma de `"move <origen> <destino>"`. Este comando representa la finalización del movimiento de un barco, y al ejecutarse mueve el nombre del barco de `<origen>` a `<destino>` y cierra (`False`) la compuerta entre origen y destino. Por ejemplo, el comando `"move qu 0"` mueve el barco de la fila río abajo, es decir saca el primer elemento de *queue_upstream* (recuerden que el nombre está dado por la dirección a recorrer y no el lugar donde están) y lo pone en la esclusa 0.Además, cierra la compuerta 0.
+1. **Comando move**: Este tiene la forma de `"move <origen> <destino>"`. Este comando representa la finalización del movimiento de un barco, y al ejecutarse mueve el nombre del barco de `<origen>` a `<destino>` y cierra (`False`) la compuerta entre origen y destino. Por ejemplo, el comando `"move qd 0"` mueve el barco de la fila río abajo, es decir saca el primer elemento de *queue_upstream* (recuerden que el nombre está dado por la dirección a recorrer y no el lugar donde están) y lo pone en la esclusa 0.Además, cierra la compuerta 0.
 
 2. **Comando level**: Este tiene la forma de `"level <esclusa> <nivel>"`. Este comando representa la finalización de un cambio de nivel en una esclusa, y al ejecutarse cambia el nivel de la esclusa referida al nivel deseado. Por ejemplo, el comando `"level 1 high"` setea el nivel de la esclusa 1 en *high*.
 
@@ -71,17 +71,17 @@ Además, los barcos no pueden retroceder, es decir, moverse en una dirección op
 
 ### Fase III: Mover barcos al canal desde las filas
 
-Finalmente, el programa ve si hay barcos que quieren entrar al canal. Obviamente, tiene que estar el canal abierto. Si la dirección es *upstream*, debo chequear si hay barcos en la fila, *queue_upstream*. En caso de que haya:
+Finalmente, el programa ve si hay barcos que quieren entrar al canal. Obviamente, tiene que estar el canal abierto. Si la dirección es *upstream*, debo chequear si hay barcos en la fila, *queue_downstream* (*downstream* porque ingresan desde río abajo). En caso de que haya:
 - Si la esclusa 0 está ocupada por un barco no hago nada.
 - Si la esclusa 0 está *draining* o *filling* tampoco hago nada.
 - Si la esclusa 0 está *high* debo bajar su nivel a *low*. Esto se hace igual que con las esclusas, setear el nivel a *draining* y agregar el comando `(10, level 0 low)`.
-- Si la esclusa está *low*, puedo entrar al canal. Esto se hace abriendo la compuerta 0 y agregando el comando correspondiente, `(2, "move qu 0")`.
+- Si la esclusa está *low*, puedo entrar al canal. Esto se hace abriendo la compuerta 0 y agregando el comando correspondiente, `(2, "move qd 0")`.
 
-En el caso de dirección *downstream*, es muy parecido. Si hay barcos en la fila, *queue_downstream*:
+En el caso de dirección *downstream*, es muy parecido. Si hay barcos en la fila, *queue_upstream* (*upstream* porque ingresan desde río arriba):
 - Si la esclusa 2 está ocupada por un barco no hago nada.
 - Si la esclusa 2 está *draining* o *filling* tampoco hago nada.
 - Si la esclusa 2 está *low* debo subir su nivel a *high*. Esto se hace igual que con las esclusas, setear el nivel a *filling* y agregar el comando `(10, level 2 high)`.
-- Si la esclusa está *high*, puedo entrar al canal. Esto se hace abriendo la compuerta 3 y agregando el comando correspondiente, `(2, "move qd 2")`.
+- Si la esclusa está *high*, puedo entrar al canal. Esto se hace abriendo la compuerta 3 y agregando el comando correspondiente, `(2, "move qu 2")`.
 
 
 ## Entrevista a empleados
