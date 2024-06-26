@@ -104,6 +104,7 @@ def execute_control(canal_state: CanalState) -> None:
     for command in ready_commands:
         execute_command(canal_state,command[1])
     canal_state["control"] = list(filter(lambda command: command[0] > 0, canal_state["control"]))
+    return canal_state
 
 def move_through_locks(canal_state: CanalState) -> None:
     direction = canal_state["direction"]
@@ -171,6 +172,7 @@ def move_through_locks(canal_state: CanalState) -> None:
                             open_lock(canal_state,lock,direction)
                             #Start moving the boat to the next lock
                             canal_state["control"].append((2,f"move {lock} {next_lock}"))
+    return canal_state
 
 def move_boats_from_queue(canal_state: CanalState) -> None:
     #If the direction is upstream, boats should be moved from the upstream queue to the first lock
@@ -198,6 +200,7 @@ def move_boats_from_queue(canal_state: CanalState) -> None:
                 open_lock(canal_state,2,"upstream")
                 #Start moving the boat to the last lock
                 canal_state["control"].append((2,f"move qu 2"))
+    return canal_state
 
 def minute(canal_state: CanalState) -> None:
     #Decreases the time of the commands in the control list by 1
