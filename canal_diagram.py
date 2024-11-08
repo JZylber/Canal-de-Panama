@@ -113,15 +113,15 @@ def draw_state(screen, dimensions, initial_height, state : CanalState):
     debug_font = pygame.font.SysFont("montserrat", 24)
     line_height = 2
     text_height = initial_height
-    locks_text = debug_font.render(f"{"Locks": <10}: {state['locks']}", 1, (0,0,0))
+    locks_text = debug_font.render(f"{'Locks': <10}: {state['locks']}", 1, (0,0,0))
     locks_text_rect = locks_text.get_rect()
     screen.blit(locks_text, (dimensions["SCREEN_WIDTH"], text_height))
     text_height += locks_text_rect.height + line_height
-    levels_text = debug_font.render(f"{"Levels": <10}: {state['locks_water_level']}", 1, (0,0,0))
+    levels_text = debug_font.render(f"{'Levels': <10}: {state['locks_water_level']}", 1, (0,0,0))
     levels_text_rect = levels_text.get_rect()
     screen.blit(levels_text, (dimensions["SCREEN_WIDTH"], text_height))
     text_height += levels_text_rect.height + line_height
-    gates_text = debug_font.render(f"{"Gates": <10}: {state['gates']}", 1, (0,0,0))
+    gates_text = debug_font.render(f"{'Gates': <10}: {state['gates']}", 1, (0,0,0))
     gates_text_rect = gates_text.get_rect()
     screen.blit(gates_text, (dimensions["SCREEN_WIDTH"], text_height))
     text_height += gates_text_rect.height + line_height
