@@ -111,7 +111,7 @@ Para correr el simulador y ver interactivamente como funciona el canal, deben te
 - El reloj, al hacer click avanza un minuto.
 - Los `+` suman un barco a la fila del lado en que están.
 - Las flechas a ambos lados invierten la dirección del canal.
-- El botón `DEBUG` permite ver **parcialmente** el estado, en particular los barcos en las esclusas, los niveles de agua, las compuertas, y el control. Las filas, la dirección y si está abierto o no se ve claramente en pantalla, así que no se incluyó en las características que se ven en el debug.
+- El botón `DEBUG` permite ver **parcialmente** el estado, en particular los barcos en las esclusas, los niveles de agua, las compuertas, y el control. Las filas, la dirección y si está abierto o no se ve claramente en pantalla, así que no se incluyó en las características que se ven en el debug. Se ven 4 iteraciones del estado: El inicial, el estado después de fase 1, el estado después de fase 2 y el estado después de fase 3. Este último es el que se ve en el diagrama.
 
 ## Consigna
 

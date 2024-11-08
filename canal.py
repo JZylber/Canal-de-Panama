@@ -1,4 +1,5 @@
 from typing import TypedDict
+import copy
 
 class CanalState(TypedDict):
     locks: list[str]
@@ -9,6 +10,21 @@ class CanalState(TypedDict):
     direction: str
     control: list[(int,str)]
     open : bool
+
+class StateObserver:
+    def __init__(self):
+        self.states = {
+            "Initial": initial_canal_state(),
+            "Phase 1": initial_canal_state(),
+            "Phase 2": initial_canal_state(),
+            "Final": initial_canal_state()
+        }
+    def observe_state(self, phase: str, state:CanalState ) -> None :
+        self.states[phase] = copy.deepcopy(state)
+
+    def get_state(self, phase: str) -> CanalState:
+        return self.states[phase]
+        
 
 def initial_canal_state() -> CanalState:
     return {
@@ -202,14 +218,22 @@ def move_boats_from_queue(canal_state: CanalState) -> None:
                 canal_state["control"].append((2,f"move qu 2"))
     return canal_state
 
-def minute(canal_state: CanalState) -> None:
+def minute(canal_state: CanalState, observer: StateObserver | None = None) -> None:
+    if observer is not None:
+        observer.observe_state("Initial",canal_state)
     #Decreases the time of the commands in the control list by 1
     canal_state["control"] = list(map(lambda command: (command[0] - 1,command[1]), canal_state["control"]))
     #Executes the commands that are ready
     execute_control(canal_state)
+    if observer is not None:
+        observer.observe_state("Phase 1",canal_state)
     #Moves the boats through the locks
     move_through_locks(canal_state)
+    if observer is not None:
+        observer.observe_state("Phase 2",canal_state)
     #Attempt to move boats from the queue to the locks if the canal is open
     if canal_state["open"]:
         move_boats_from_queue(canal_state)
+    if observer is not None:
+        observer.observe_state("Final",canal_state)
                 

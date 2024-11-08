@@ -1,5 +1,5 @@
 import pygame
-from canal import minute, initial_canal_state
+from canal import minute, initial_canal_state, CanalState, StateObserver
 
 def draw_arrow(screen, dimensions, center, direction):
     arrow_image = pygame.image.load(f"assets/arrow.png").convert_alpha()
@@ -109,41 +109,62 @@ def update_upstream_queue(screen, dimensions, state):
     pygame.draw.rect(screen, (255,255,255), [upstream_queue_position[0] - 5, upstream_queue_position[1] - 5, upstream_queue_rect.width + 10, upstream_queue_rect.height + 10])
     screen.blit(upstream_queue, upstream_queue_position)
 
-def draw_debug(screen, dimensions, state):
+def draw_state(screen, dimensions, initial_height, state : CanalState):
     debug_font = pygame.font.SysFont("montserrat", 24)
-    clear_debug(screen, dimensions)
-    text_height = 100
-    locks_text = debug_font.render(f"Locks: {state['locks']}", 1, (0,0,0))
+    line_height = 2
+    text_height = initial_height
+    locks_text = debug_font.render(f"{"Locks": <10}: {state['locks']}", 1, (0,0,0))
     locks_text_rect = locks_text.get_rect()
-    screen.blit(locks_text, (dimensions["SCREEN_WIDTH"] - locks_text_rect.width - 15, text_height))
-    text_height += locks_text_rect.height + 5
-    levels_text = debug_font.render(f"Levels: {state['locks_water_level']}", 1, (0,0,0))
+    screen.blit(locks_text, (dimensions["SCREEN_WIDTH"], text_height))
+    text_height += locks_text_rect.height + line_height
+    levels_text = debug_font.render(f"{"Levels": <10}: {state['locks_water_level']}", 1, (0,0,0))
     levels_text_rect = levels_text.get_rect()
-    screen.blit(levels_text, (dimensions["SCREEN_WIDTH"] - levels_text_rect.width - 15, text_height))
-    text_height += levels_text_rect.height + 5
-    gates_text = debug_font.render(f"Gates: {state['gates']}", 1, (0,0,0))
+    screen.blit(levels_text, (dimensions["SCREEN_WIDTH"], text_height))
+    text_height += levels_text_rect.height + line_height
+    gates_text = debug_font.render(f"{"Gates": <10}: {state['gates']}", 1, (0,0,0))
     gates_text_rect = gates_text.get_rect()
-    screen.blit(gates_text, (dimensions["SCREEN_WIDTH"] - gates_text_rect.width - 15, text_height))
-    text_height += gates_text_rect.height + 5
-    control_text = debug_font.render(f"CONTROL", 1, (0,0,0))
+    screen.blit(gates_text, (dimensions["SCREEN_WIDTH"], text_height))
+    text_height += gates_text_rect.height + line_height
+    control_text = debug_font.render(f"Control:", 1, (0,0,0))
     control_text_rect = control_text.get_rect()
-    screen.blit(control_text, (dimensions["SCREEN_WIDTH"] - control_text_rect.width - 15, text_height))
-    text_height += control_text_rect.height + 5
+    screen.blit(control_text, (dimensions["SCREEN_WIDTH"], text_height))
+    text_height += control_text_rect.height + line_height
     for action in state["control"]:
         action_text = debug_font.render(f"{action}", 1, (0,0,0))
         action_text_rect = action_text.get_rect()
-        screen.blit(action_text, (dimensions["SCREEN_WIDTH"] - action_text_rect.width - 15, text_height))
-        text_height += action_text_rect.height + 5
+        screen.blit(action_text, (dimensions["SCREEN_WIDTH"], text_height))
+        text_height += action_text_rect.height + line_height
+    return text_height
+
+def draw_phase_change(screen, dimensions, initial_height, phase):
+    text_height = initial_height
+    label_font = pygame.font.SysFont("montserrat", 30)
+    phase_text = label_font.render(phase, 1, (0,0,0))
+    phase_text_rect = phase_text.get_rect()
+    screen.blit(phase_text, (dimensions["SCREEN_WIDTH"] + dimensions["DEBUG_WIDTH"]/4 - phase_text_rect.width/2, text_height + 20 - phase_text_rect.height/2))
+    draw_arrow(screen, (40,30), (dimensions["SCREEN_WIDTH"] + dimensions["DEBUG_WIDTH"]/2, text_height + 20), "down")
+    return text_height + 40
+
+def draw_debug(screen, dimensions, state_observer : StateObserver):
+    clear_debug(screen, dimensions)
+    height = draw_state(screen, dimensions, 20, state_observer.get_state("Initial"))
+    height = draw_phase_change(screen, dimensions, height, "FASE 1")
+    height = draw_state(screen, dimensions, height + 5, state_observer.get_state("Phase 1"))
+    height = draw_phase_change(screen, dimensions, height, "FASE 2")
+    height = draw_state(screen, dimensions, height + 5, state_observer.get_state("Phase 2"))
+    height = draw_phase_change(screen, dimensions, height, "FASE 3")
+    height = draw_state(screen, dimensions, height + 5, state_observer.get_state("Final"))
 
 
 def clear_debug(screen, dimensions):
-    pygame.draw.rect(screen, (255,255,255), [dimensions["SCREEN_WIDTH"] - 300, 100, 300, 300])
+    pygame.draw.rect(screen, (255,255,255), [dimensions["SCREEN_WIDTH"], 0, dimensions["DEBUG_WIDTH"], dimensions["SCREEN_HEIGHT"]])
 
 
 def main(): 
     pygame.init()
     dimensions = {
-        "SCREEN_WIDTH": 1280,
+        "SCREEN_WIDTH": 1024,
+        "DEBUG_WIDTH": 342,
         "SCREEN_HEIGHT": 704,
         "LOCK_WIDTH": 200,
         "LOCK_HEIGHT": 100,
@@ -152,7 +173,7 @@ def main():
         "BOAT_HEIGHT": 35,
         "LOCK_WATER_LEVELS": [15,50,80]
     }
-    screen = pygame.display.set_mode((dimensions["SCREEN_WIDTH"], dimensions["SCREEN_HEIGHT"])) 
+    screen = pygame.display.set_mode((dimensions["SCREEN_WIDTH"] + dimensions["DEBUG_WIDTH"], dimensions["SCREEN_HEIGHT"])) 
     
     # TITLE OF CANVAS 
     pygame_icon = pygame.image.load('assets/icon.png')
@@ -189,13 +210,14 @@ def main():
     font = pygame.font.SysFont("montserrat", 60)
     debug_text = font.render("DEBUG", 1, (255,255,255))
     debug_text_rect = debug_text.get_rect()
-    debug_button = pygame.draw.rect(screen, (0,0,0), [dimensions["SCREEN_WIDTH"] - debug_text_rect.width - 15, 15, debug_text_rect.width, debug_text_rect.height])
-    screen.blit(debug_text, (dimensions["SCREEN_WIDTH"] - debug_text_rect.width - 15, 15))
+    debug_button = pygame.draw.rect(screen, (0,0,0), [dimensions["SCREEN_WIDTH"] - debug_text_rect.width - 25, 20, debug_text_rect.width, debug_text_rect.height])
+    screen.blit(debug_text, (dimensions["SCREEN_WIDTH"] - debug_text_rect.width - 25, 20))
 
 
     exit = False
     debug = False
     state = initial_canal_state()
+    state_observer = StateObserver()
     time = 0
     boat_number = 1
     display_time(screen, time)
@@ -211,13 +233,13 @@ def main():
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 position = pygame.mouse.get_pos()
                 if clock.collidepoint(position):
-                    minute(state)
+                    minute(state, state_observer)
                     time += 1
                     display_time(screen, time)
                     update_downstream_queue(screen, dimensions, state)
                     update_upstream_queue(screen, dimensions, state)
                     if debug:
-                        draw_debug(screen, dimensions, state)
+                        draw_debug(screen, dimensions, state_observer)
                 if downstream.collidepoint(position):
                     state["queue_downstream"].append(f"ARA {boat_number}")
                     boat_number += 1
@@ -231,7 +253,7 @@ def main():
                 if debug_button.collidepoint(position):
                     debug = not debug
                     if debug:
-                        draw_debug(screen, dimensions, state)
+                        draw_debug(screen, dimensions, state_observer)
                     else:
                         clear_debug(screen, dimensions)
         pygame.display.update()
