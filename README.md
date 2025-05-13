@@ -12,7 +12,7 @@ El sistema de control del canal es complejo. Nuestros compañeros de la empresa 
 
 Toda esta sección explica el funcionamiento del canal. Pueden probarlo con el simulador, `canal_diagram.py`. A continuación un diagrama de las esclusas que vamos a usar para explicar el software.
 
-![Diagrama del canal](./assets/diagram.png)
+<img src="assets/diagram.svg" alt="drawing" width="100%"/>
 
 ### Estado del Canal
 
@@ -98,12 +98,13 @@ Para saber más sobre el programa que estamos recibiendo, la empresa le hizo ent
 
 ## Librerías
 
-Para hacer este tp, se necesitan esencialmente 2 librerías: pytest para los tests, y pygame para los diagramas. Esto se hace con:
+Para hacer este tp, se necesitan esencialmente 2 librerías: pytest para los tests, y pygame para los diagramas. Pueden instalar todo de un saque usando el *requirements.txt*, haciendo:
 
 ```bash
-pip install --user pytest
-pip install --user pygame
+pip install -r requirements.txt
 ```
+
+También pueden instalar las librerías individualmente (¿Por qué harían eso?)
 
 ## Simulador
 
@@ -115,7 +116,7 @@ Para correr el simulador y ver interactivamente como funciona el canal, deben te
 
 ## Consigna
 
-Construir un conjunto de tests para la función `move_through_locks` que se encarga de la **fase II (SOLO FASE II NO ME CHILLEN TANTO)** del programa de control. La función `move_through_locks(canal_state)` toma el estado del canal y ejecuta sobre todos los barcos presentes en el canal la fase II. La función no retorna nada pero recuerden que al tomar un diccionario, este se pasa por *referencia*.
+Construir un conjunto de tests para la función `move_through_locks` que se encarga de la **fase II (SOLO FASE II NO ME CHILLEN TANTO)** del programa de control. La función `move_through_locks(canal_state)` toma el estado del canal y ejecuta sobre todos los barcos presentes en el canal la fase II. La función retorna el estado del canal al ejecutar la función.
 
 **Los tests deben estar en un archivo aparte.**
 

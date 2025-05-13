@@ -1,0 +1,1 @@
+from canal import move_through_locks
