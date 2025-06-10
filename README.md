@@ -12,7 +12,7 @@ El sistema de control del canal es complejo. Nuestros compañeros de la empresa 
 
 Toda esta sección explica el funcionamiento del canal. Pueden probarlo con el simulador, `canal_diagram.py`. A continuación un diagrama de las esclusas que vamos a usar para explicar el software.
 
-<img src="assets/diagram.svg" alt="drawing" width="100%"/>
+![Diagrama del canal](./assets/diagram.png)
 
 ### Estado del Canal
 
@@ -98,17 +98,16 @@ Para saber más sobre el programa que estamos recibiendo, la empresa le hizo ent
 
 ## Librerías
 
-Para hacer este tp, se necesitan esencialmente 2 librerías: pytest para los tests, y pygame para los diagramas. Pueden instalar todo de un saque usando el *requirements.txt*, haciendo:
+Para hacer este tp, se necesitan 3 librerías: pytest para los tests, coverage para la covertura, y pygame para los diagramas. Fui bueno y armé un requirements.txt. Para instalar todas las dependencias, pueden correr el siguiente comando:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-También pueden instalar las librerías individualmente (¿Por qué harían eso?)
-
 ## Simulador
 
-Para correr el simulador y ver interactivamente como funciona el canal, deben tener instalada la librería `pygame` y correr el archivo `canal_diagram.py`. ¿Qué es interactivo en el diagrama?
+Para correr el simulador y ver interactivamente como funciona el canal, deben correr el archivo `canal_diagram.py`. ¿Qué es interactivo en el diagrama?
+
 - El reloj, al hacer click avanza un minuto.
 - Los `+` suman un barco a la fila del lado en que están.
 - Las flechas a ambos lados invierten la dirección del canal.
@@ -116,37 +115,41 @@ Para correr el simulador y ver interactivamente como funciona el canal, deben te
 
 ## Consigna
 
-Construir un conjunto de tests para la función `move_through_locks` que se encarga de la **fase II (SOLO FASE II NO ME CHILLEN TANTO)** del programa de control. La función `move_through_locks(canal_state)` toma el estado del canal y ejecuta sobre todos los barcos presentes en el canal la fase II. La función retorna el estado del canal al ejecutar la función.
+Construir un conjunto de tests para la función `move_through_locks` que se encarga de la **fase II (SOLO FASE II NO ME CHILLEN TANTO)** del programa de control. La función `move_through_locks(canal_state)` toma el estado del canal y ejecuta sobre todos los barcos presentes en el canal la fase II. La función no retorna nada pero recuerden que al tomar un diccionario, este se pasa por *referencia*.
 
 **Los tests deben estar en un archivo aparte.**
 
-Deben tener en cuenta no sólo lo descrito en la sección de funcionamiento, sino además hacer pruebas basados en los puntos difíciles del programa que marcó el ingeniero entrevistado.
+El conjunto de tests debe lograr una cobertura del 100% (line y branch coverage) de la función `move_through_locks`. Para esto, deben tener en cuenta todos los casos que se describen en la sección de funcionamiento, y además los puntos difíciles que marcó el ingeniero entrevistado.
 
 Además, otro miembro de nuestro equipo creó un copia del programa de control con algunos *bugs* intencionales, para probar nuestros tests. Este archivo es `canal_buggeado.py`. Nuestro conjunto de tests debe ser capaz de detectar la falla.
+
+**TIP**: Los bugs intruducidos pueden no ser levantados por los tests incluso cuando los tests tienen 100% de cobertura en ambas métricas. Tiene más que ver con una de las dificultades que mencionó el ingeniero entrevistado. El ingeniero además es prolijo, y describe una dificultad por párrafo.
 
 ## Archivos
 
 El tp cuenta con los siguientes archivos:
+
 - carpeta *assets*: contiene todas las imágenes para correr el simulador.
 - *canal.py*: Funciones que ejecutan la lógica del canal.
 - *canal_diagram.py*: Interfaz gráfica para correr el simulador.
 - *canal_buggeado.py*: Funciones que ejecutan la lógica del canal, pero con bugs.
+- *requirements.txt*: Archivo con las dependencias del tp.
+- *README.md*: Este archivo, con la consigna del tp.
 
 ## Rúbrica de Evaluación
 
 La el trabajo práctico va a ser evaluado con la rúbrica que está a continuación. Los puntos obtenidos van a ser marcados con negrita y se explicará la razón en los comentarios. La nota final se encuentra al final.
 
-||Satisfactorio|Mejorable|Pendiente|Comentario
-|---|---|---|---|---|
-|Fase II|Los tests tienen en cuenta todos los casos descritos en la fase II (2 puntos)|Varios de los casos descritos en la fase II no están siendo tenidos en cuenta (1 punto)|No se tienen en cuenta los casos descritos en la fase II (0 puntos)|
-|Entrevista|Existen tests que prueban las dificultades descritas por el ingeniero (2 puntos)|Hay algunos tests que prueban las dificultades descritas por el ingeniero (1 punto)|No  hay tests que prueban las dificultades descritas por el ingeniero (0 puntos)|
-|Debugging|Los tests permiten discernir el programa buggeado (1 punto)|Los tests muestran errores, pero no dan ninguna pista por sobre donde está el error (0,5 puntos)|El programa buggeado pasa todos los tests (0 puntos)|
-|Relevancia|Los tests prueban la funcionalidad específica de la función (1 punto)|Muchos tests prueban cosas no relevantes a la función (0,5 puntos)| Casi ningún test prueba la funcionalidad específica de la función (0 puntos)|
-|Organización|Los tests están correctamente separados por casos (1 punto)|Muchos tests prueban más de un caso en un mismo test (0,5 puntos)|Hay un único/unos pocos megatests que hacen todas las prueba (0 puntos)|
-|Cobertura|Los tests comparan todo el estado del canal (1 punto)|Los tests comparan solo parte del estado del canal (0,5 puntos)|Los tests no comparan el estado del canal (0 puntos)|
-|Funcionalidad|Los tests andan correctamente (1 punto)|Los tests andan, pero muchos están escritos de forma muy confusa o hacen cosas innecesarias (0,5 puntos)|Los tests no andan, y fallan por problemas del test y no por la función (0 puntos)|
-|Nombres|Los tests tienen nombres apropiados a la situación que evalúan (0,5 puntos)|Muchos tests tienen nombres poco descriptivos (0,25 puntos)|La mayoría de los tests tiene nombres no relevantes como una enumeración (0 puntos)|
-|Superposición|Los tests evalúan situaciones con lo mínimo indispensable para probar cada caso (0,5 puntos)|En muchos casos los tests evalúan de forma innecesaria otros casos o muchos tests repiten los mismos casos (0,25 puntos)|La gran mayoría de los tests prueba cosas que exceden al caso a testear o es la misma prueba repetida muchas veces (0 puntos)|
+||Satisfactorio|Mejorable|Pendiente
+|---|---|---|---
+|Cobertura|Los tests cubren en un 100% lineas y branches de la función *move_through_locks* (5 puntos)| Los tests cubren parcialmente las líneas y las branches (2,5 puntos)|Los tests cubren en un 0% líneas y branches de la función *move_through_locks* (0 puntos)
+|Debugging|Los tests permiten discernir el programa buggeado (1 punto)|Los tests muestran errores, pero no dan ninguna pista por sobre donde está el error (0,5 puntos)|El programa buggeado pasa todos los tests (0 puntos)
+|Relevancia|Los tests prueban la funcionalidad específica de la función (1 punto)|Muchos tests prueban cosas no relevantes a la función (0,5 puntos)| Casi ningún test prueba la funcionalidad específica de la función (0 puntos)
+|Resultados esperados|Los tests comparan todo el estado del canal (1 punto)|Los tests comparan solo parte del estado del canal (0,5 puntos)|Los tests no comparan el estado del canal (0 puntos)
+|Organización|Los tests están correctamente separados por casos (0,5 puntos)|Muchos tests prueban más de un caso en un mismo test (0,25 puntos)|Hay un único/unos pocos megatests que hacen todas las prueba (0 puntos)|
+|Funcionalidad|Los tests andan correctamente (0,5 puntos)|Los tests andan, pero muchos están escritos de forma muy confusa o hacen cosas innecesarias (0,25 puntos)|Los tests no andan, y fallan por problemas del test y no por la función (0 puntos)
+|Nombres|Los tests tienen nombres apropiados a la situación que evalúan (0,5 puntos)|Muchos tests tienen nombres poco descriptivos (0,25 puntos)|La mayoría de los tests tiene nombres no relevantes como una enumeración (0 puntos)
+|Superposición|Los tests evalúan situaciones con lo mínimo indispensable para probar cada caso (0,5 puntos)|En muchos casos los tests evalúan de forma innecesaria otros casos o muchos tests repiten los mismos casos (0,25 puntos)|La gran mayoría de los tests prueba cosas que exceden al caso a testear o es la misma prueba repetida muchas veces (0 puntos)
 
 **NOTA FINAL:**
 
