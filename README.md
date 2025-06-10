@@ -140,17 +140,15 @@ El tp cuenta con los siguientes archivos:
 
 La el trabajo práctico va a ser evaluado con la rúbrica que está a continuación. Los puntos obtenidos van a ser marcados con negrita y se explicará la razón en los comentarios. La nota final se encuentra al final.
 
-||Satisfactorio|Mejorable|Pendiente
-|---|---|---|---
-|Cobertura|Los tests cubren en un 100% lineas y branches de la función *move_through_locks* (5 puntos)| Los tests cubren parcialmente las líneas y las branches (2,5 puntos)|Los tests cubren en un 0% líneas y branches de la función *move_through_locks* (0 puntos)
-|Debugging|Los tests permiten discernir el programa buggeado (1 punto)|Los tests muestran errores, pero no dan ninguna pista por sobre donde está el error (0,5 puntos)|El programa buggeado pasa todos los tests (0 puntos)
-|Relevancia|Los tests prueban la funcionalidad específica de la función (1 punto)|Muchos tests prueban cosas no relevantes a la función (0,5 puntos)| Casi ningún test prueba la funcionalidad específica de la función (0 puntos)
-|Resultados esperados|Los tests comparan todo el estado del canal (1 punto)|Los tests comparan solo parte del estado del canal (0,5 puntos)|Los tests no comparan el estado del canal (0 puntos)
+||Satisfactorio|Mejorable|Pendiente|Comentarios
+|---|---|---|---|---
+|Cobertura|Los tests cubren en un 100% lineas y branches de la función *move_through_locks* (5 puntos)| Los tests cubren parcialmente las líneas y las branches (2,5 puntos)|Los tests cubren en un 0% líneas y branches de la función *move_through_locks* (0 puntos)|
+|Debugging|Los tests permiten discernir el programa buggeado (1 punto)|Los tests muestran errores, pero no dan ninguna pista por sobre donde está el error (0,5 puntos)|El programa buggeado pasa todos los tests (0 puntos)|
+|Relevancia|Los tests prueban la funcionalidad específica de la función (1 punto)|Muchos tests prueban cosas no relevantes a la función (0,5 puntos)| Casi ningún test prueba la funcionalidad específica de la función (0 puntos)|
+|Resultados esperados|Los tests comparan todo el estado del canal (1 punto)|Los tests comparan solo parte del estado del canal (0,5 puntos)|Los tests no comparan el estado del canal (0 puntos)|
 |Organización|Los tests están correctamente separados por casos (0,5 puntos)|Muchos tests prueban más de un caso en un mismo test (0,25 puntos)|Hay un único/unos pocos megatests que hacen todas las prueba (0 puntos)|
-|Funcionalidad|Los tests andan correctamente (0,5 puntos)|Los tests andan, pero muchos están escritos de forma muy confusa o hacen cosas innecesarias (0,25 puntos)|Los tests no andan, y fallan por problemas del test y no por la función (0 puntos)
-|Nombres|Los tests tienen nombres apropiados a la situación que evalúan (0,5 puntos)|Muchos tests tienen nombres poco descriptivos (0,25 puntos)|La mayoría de los tests tiene nombres no relevantes como una enumeración (0 puntos)
-|Superposición|Los tests evalúan situaciones con lo mínimo indispensable para probar cada caso (0,5 puntos)|En muchos casos los tests evalúan de forma innecesaria otros casos o muchos tests repiten los mismos casos (0,25 puntos)|La gran mayoría de los tests prueba cosas que exceden al caso a testear o es la misma prueba repetida muchas veces (0 puntos)
+|Funcionalidad|Los tests andan correctamente (0,5 puntos)|Los tests andan, pero muchos están escritos de forma muy confusa o hacen cosas innecesarias (0,25 puntos)|Los tests no andan, y fallan por problemas del test y no por la función (0 puntos)|
+|Nombres|Los tests tienen nombres apropiados a la situación que evalúan (0,5 puntos)|Muchos tests tienen nombres poco descriptivos (0,25 puntos)|La mayoría de los tests tiene nombres no relevantes como una enumeración (0 puntos)|
+|Superposición|Los tests evalúan situaciones con lo mínimo indispensable para probar cada caso (0,5 puntos)|En muchos casos los tests evalúan de forma innecesaria otros casos o muchos tests repiten los mismos casos (0,25 puntos)|La gran mayoría de los tests prueba cosas que exceden al caso a testear o es la misma prueba repetida muchas veces (0 puntos)|
 
 **NOTA FINAL:**
-
-
